@@ -17,27 +17,27 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"programmeryuan.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="归并排序归并排序的概念归并排序，是创建在归并操作上的一种有效的排序算法。算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。归并排序思路简单，速度仅次于快速排序，为稳定排序算法，一般用于对总体无序，但是各子项相对有序的数列。 归并排序基于分治算法。最容易想到的实现方式是自顶向下的递归实现, 自顶向下归并排序的递归调用的栈空间大小为 O(logn">
 <meta property="og:type" content="article">
 <meta property="og:title" content="归并排序简述">
-<meta property="og:url" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/index.html">
+<meta property="og:url" content="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/index.html">
 <meta property="og:site_name" content="蘅芜苑">
 <meta property="og:description" content="归并排序归并排序的概念归并排序，是创建在归并操作上的一种有效的排序算法。算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。归并排序思路简单，速度仅次于快速排序，为稳定排序算法，一般用于对总体无序，但是各子项相对有序的数列。 归并排序基于分治算法。最容易想到的实现方式是自顶向下的递归实现, 自顶向下归并排序的递归调用的栈空间大小为 O(logn">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png">
-<meta property="og:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-2034-20161218194508761-468169540.png">
-<meta property="og:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-7614-20161218194621308-588010220.png">
+<meta property="og:image" content="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png">
+<meta property="og:image" content="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-2034-20161218194508761-468169540.png">
+<meta property="og:image" content="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-7614-20161218194621308-588010220.png">
 <meta property="article:published_time" content="2022-06-24T10:54:21.000Z">
 <meta property="article:modified_time" content="2022-06-24T10:57:24.899Z">
 <meta property="article:author" content="青色的豆子">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png">
+<meta name="twitter:image" content="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png">
 
-<link rel="canonical" href="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/">
+<link rel="canonical" href="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/">
 
 
 <script id="page-configurations">
@@ -119,7 +119,7 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/home/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
@@ -170,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -328,7 +328,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/" title="归并排序简述">http://example.com/2022/06/24/归并排序简述/</a>
+    <a href="http://programmeryuan.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/" title="归并排序简述">http://programmeryuan.com/2022/06/24/归并排序简述/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
