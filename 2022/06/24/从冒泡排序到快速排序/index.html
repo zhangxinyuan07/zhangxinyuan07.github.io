@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-me.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-me.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-me.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="冒泡排序冒泡排序的概念冒泡排序的英文Bubble Sort，是一种最基础的交换排序。之所以叫做冒泡排序，因为每一个元素都可以像小气泡一样，根据自身大小一点一点向数组的一侧移动。 冒泡排序的原理每一趟只能确定将一个数归位。即第一趟只能确定将末位上的数归位，第二趟只能将倒数第 2 位上的数归位，依次类推下去。如果有 n 个数进行排序，只需将 n-1 个数归位，也就是要进行 n-1 趟操作。 而”每一趟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从冒泡排序到快速排序">
+<meta property="og:url" content="http://example.com/2022/06/24/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/index.html">
+<meta property="og:site_name" content="蘅芜苑">
+<meta property="og:description" content="冒泡排序冒泡排序的概念冒泡排序的英文Bubble Sort，是一种最基础的交换排序。之所以叫做冒泡排序，因为每一个元素都可以像小气泡一样，根据自身大小一点一点向数组的一侧移动。 冒泡排序的原理每一趟只能确定将一个数归位。即第一趟只能确定将末位上的数归位，第二趟只能将倒数第 2 位上的数归位，依次类推下去。如果有 n 个数进行排序，只需将 n-1 个数归位，也就是要进行 n-1 趟操作。 而”每一趟">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/20210611113132421.gif">
+<meta property="og:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/20210611113305227.png">
+<meta property="og:image" content="http://example.com/2022/06/24/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/从冒泡排序到快速排序/1-1Q00220010V16.jpg">
+<meta property="og:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/1-1Q00220013M46.jpg">
+<meta property="og:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/1-1Q00220025I54.jpg">
+<meta property="og:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/1612615552-rifQwI-Picture1.png">
+<meta property="og:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/image-20220608211010865.png">
+<meta property="article:published_time" content="2022-06-24T11:00:38.000Z">
+<meta property="article:modified_time" content="2022-06-24T11:05:11.002Z">
+<meta property="article:author" content="青色的豆子">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/20210611113132421.gif">
+
+<link rel="canonical" href="http://example.com/2022/06/24/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从冒泡排序到快速排序 | 蘅芜苑</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">蘅芜苑</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/home/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/24/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="青色的豆子">
+      <meta itemprop="description" content="杨花榆荚无才思，惟解漫天作雪飞">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="蘅芜苑">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从冒泡排序到快速排序
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-24 19:00:38 / 修改时间：19:05:11" itemprop="dateCreated datePublished" datetime="2022-06-24T19:00:38+08:00">2022-06-24</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><h2 id="冒泡排序的概念"><a href="#冒泡排序的概念" class="headerlink" title="冒泡排序的概念"></a>冒泡排序的概念</h2><p>冒泡排序的英文<strong>Bubble Sort</strong>，是一种最基础的<strong>交换排序</strong>。之所以叫做冒泡排序，因为每一个元素都可以像小气泡一样，根据自身大小一点一点向<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%95%B0%E7%BB%84&spm=1001.2101.3001.7020">数组</a>的一侧移动。</p>
+<h2 id="冒泡排序的原理"><a href="#冒泡排序的原理" class="headerlink" title="冒泡排序的原理"></a>冒泡排序的原理</h2><p><code>每一趟只能确定将一个数归位</code>。即第一趟只能确定将末位上的数归位，第二趟只能将倒数第 2 位上的数归位，依次类推下去。如果有 n 个数进行排序，只需将 n-1 个数归位，也就是要进行 n-1 趟操作。</p>
+<p>而”每一趟”都需要从第一位开始进行相邻的两个数的比较，将较大的数放后面，比较完毕之后向后挪一位继续比较下面两个相邻的两个数大小关系，重复此步骤，直到最后一个还没归位的数。<span id="more"></span></p>
+<h2 id="冒泡排序的特点及性能"><a href="#冒泡排序的特点及性能" class="headerlink" title="冒泡排序的特点及性能"></a>冒泡排序的特点及性能</h2><p><img src="/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/20210611113132421.gif" alt="img"></p>
+<p>由上图可知，4 个石子的时候排完序需要 3 趟，第一趟需要比较3次，第二趟需要比较2次，第三趟需要比较1次，那一共比较了 3 + 2 + 1 次；</p>
+<p>那如果有 <code>n</code> 个石子呢？</p>
+<p>那就需要 <code>(n-1) + (n-2) +…+2+1</code> 次，这不就是一个等差数列吗，很显然：</p>
+<p><img src="/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/20210611113305227.png" alt="img"></p>
+<blockquote>
+<p>根据复杂度的规则，去掉低阶项（也就是 n&#x2F;2）,并去掉常数系数，那复杂度就是 **O(n^2)**了；</p>
+<p>冒泡排序也是一种<strong>稳定排序</strong>，因为在两个数交换的时候，如果两个数相同，那么它们并不会因为算法中哪条语句相互交换位置。</p>
+<p>对于冒泡排序，我们应该对它的思想进行理解，作为排序算法学习的引导，让我们的思维更加开阔。</p>
+<p>虽然<code>冒泡排序在我们的实际工作中并不会用到</code>，其他排序算法多多少少比冒泡排序算法的性能更高，但是我们还是要掌握冒泡排序的思想及实现，并且在面试时还是有可能会用到。</p>
+</blockquote>
+<h2 id="冒泡排序的实现"><a href="#冒泡排序的实现" class="headerlink" title="冒泡排序的实现"></a>冒泡排序的实现</h2><h3 id="冒泡排序原始版"><a href="#冒泡排序原始版" class="headerlink" title="冒泡排序原始版"></a>冒泡排序原始版</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//按照刚才那个动图进行对应</span></span><br><span class="line"><span class="comment">//冒泡排序两两比较的元素是没有被排序过的元素---&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = vec.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">//控制比较轮次，一共 n-1 趟</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)&#123;</span><br><span class="line">        <span class="comment">//控制两个挨着的元素进行比较, 每一趟比较 n - 1 - i个数(因为后面的已经排好了)</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - <span class="number">1</span> - i; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(vec[j] &gt; vec[j + <span class="number">1</span>])&#123;</span><br><span class="line">                <span class="built_in">swap</span>(vec[j], vec[j + <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面是对循环变量稍作改进的版本, 看起来更简洁:</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = vec.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">//控制比较轮次，一共 n-1 趟</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="comment">//控制两个挨着的元素进行比较, 每一趟比较 n - 1 - i个数(因为后面的已经排好了)</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(vec[j] &gt; vec[j + <span class="number">1</span>])&#123;</span><br><span class="line">                <span class="built_in">swap</span>(vec[j], vec[j + <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="冒泡排序优化版"><a href="#冒泡排序优化版" class="headerlink" title="冒泡排序优化版"></a>冒泡排序优化版</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = vec.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 记录最后一次交换的位置</span></span><br><span class="line">    <span class="type">int</span> lastExchangeIdx = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 无序数列的边界, 每次比较到这里为止</span></span><br><span class="line">    <span class="type">int</span> sortBorder = n - <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="type">bool</span> isSorted = <span class="literal">true</span>; <span class="comment">// 有序标记, 每一轮初始都是true</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; sortBorder; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(vec[j] &gt; vec[j + <span class="number">1</span>])&#123;</span><br><span class="line">                isSorted = <span class="literal">false</span>; <span class="comment">// 有元素交换所以不是有序</span></span><br><span class="line">                <span class="built_in">swap</span>(vec[j], vec[j + <span class="number">1</span>]);</span><br><span class="line">                lastExchangeIdx = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        sortBorder = lastExchangeIdx;</span><br><span class="line">        <span class="comment">// 一趟下来如果没有交换, 则说明已没有要交换的元素, 直接跳出大循环</span></span><br><span class="line">        <span class="keyword">if</span> (isSorted) <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1><h2 id="快速排序的概念"><a href="#快速排序的概念" class="headerlink" title="快速排序的概念"></a>快速排序的概念</h2><p>快速排序是对<a target="_blank" rel="noopener" href="http://data.biancheng.net/view/70.html">冒泡排序</a>的一种改进</p>
+<p>快速排序的&#x3D;&#x3D;基本思想&#x3D;&#x3D;是：通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据比另一部分的所有数据要小，再按这种方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，使整个数据变成有序序列。</p>
+<h2 id="快速排序的原理"><a href="#快速排序的原理" class="headerlink" title="快速排序的原理"></a>快速排序的原理</h2><p>排序算法的思想非常简单，在待排序的数列中，我们首先要找一个数字作为基准数（这只是个专用名词）。为了方便，我们一般选择第 1 个数字作为基准数（其实选择第几个并没有关系）。接下来我们需要把这个待排序的数列中小于基准数的元素移动到待排序的数列的左边，把大于基准数的元素移动到待排序的数列的右边。这时，左右两个分区的元素就相对有序了；接着把两个分区的元素分别按照上面两种方法继续对每个分区找出基准数，然后移动，直到各个分区只有一个数时为止。</p>
+<p><strong>这是典型的分治思想，即分治法</strong>。下面我们对一个实际例子进行算法描述，讲解快速排序的排序步骤。</p>
+<p>以 47、29、71、99、78、19、24、47 的待排序的数列为例进行排序，为了方便区分两个 47，我们对后面的 47 增加一个下画线，即待排序的数列为 47、29、71、99、78、19、24、47。</p>
+<p>首先我们需要在数列中选择一个基准数，我们一般会选择中间的一个数或者头尾的数，这里直接选择第 1 个数 47 作为基准数，接着把比 47 小的数字移动到左边，把比 47 大的数字移动到右边，对于相等的数字不做移动。所以实际上我们需要找到中间的某个位置 k，这样 k 左边的值全部比 k 上的值小，k 右边的值全部比 k 上的值大。</p>
+<p>接下来开始移动元素。怎么移动呢？其实冒泡排序也涉及对元素的移动，但是那样移动起来很累，比如把最后一个元素移动到第 1 个，就需要比较 n-1 次，同时交换 n-1 次，效率很低。<strong>其实，只需把第 1 个元素和最后一个元素交换就好了，这种思想是不是在排序时可以借鉴呢？之前说快速排序就是对冒泡排序的一个改进，就是这个原因。</strong></p>
+<p><strong>快速排序的操作</strong>是这样的：首先从数列的右边开始往左边找，我们设这个下标为 i，也就是进行减减操作（i–），找到第 1 个比基准数小的值，让它与基准值交换；接着从左边开始往右边找，设这个下标为 j，然后执行加加操作（j++），找到第 1 个比基准数大的值，让它与基准值交换；然后继续寻找，直到 i 与 j 相遇时结束，最后基准值所在的位置即 k 的位置，也就是说 k 左边的值均比 k 上的值小，而 k 右边的值都比 k 上的值大。</p>
+<p>所以对于上面的数列 47、29、71、99、78、19、24、47，进行第 1 趟第 1 个交换的排序情况如下，第 1 次的操作情况如图 1 所示。</p>
+<img src="从冒泡排序到快速排序/1-1Q00220010V16.jpg" alt="img"  />
+
+<p>​									 图 1 第 1 次发现可以交换的数(图片来自网络)</p>
+<p>交换之后，j 移动到了下标为 6 的位置，对 i 继续扫描，如图 2 所示。</p>
+<p><img src="/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/1-1Q00220013M46.jpg" alt="img"></p>
+<p>​									图 2 第 2 次发现可交换的值(图片来自网络)</p>
+<p>此时交换后的数列变为 24、29、47、99、78、19、71、47。接下来我们继续对 i、j 进行操作，如图 3 所示，继续进行 i– 及 j++ 的比较操作。</p>
+<p><img src="/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/1-1Q00220025I54.jpg" alt="img"></p>
+<p>​									图 3 继续进行 i 与 j 的移动(图片来自网络)</p>
+<p>进行了这两次 i、j 的移动、比较、交换之后，我们最终得到的数列是 24、29、19、47、78、99、71、47。接下来我们继续进行 i– 的操作，发现在 i 为 4 时比 47 大不用交换，在 i 为 3 时与 j 相遇，这时就不需要继续移动、比较了，已经找到 k 了，并且 k 的值为 3。我们可以确认一下当前的数列是不是 k 左边的值都比 47 小，而 k 右边的值都比 47 大（由于要保持相对位置不变，所以 47 同样在基准值 47 的右边）。</p>
+<p>47 这个值已经落到了它该在的位置，<strong>第 1 趟排序完成了。接下来就是以 k 为基准，分为两部分，然后在左右两部分分别执行上述排序操作，最后数据会分为 4 部分；接着对每部分进行操作，直到每部分都只有一个值为止。</strong></p>
+<p>接下来进行第 2 趟排序，现在左边部分为 24、29、19，我们选择第 1 个数 24 作为基准数，接着进行 i–、j++ 的操作，我们发现 i 最初的值为 19，比 24 这个基准值小，所以与基准值进行交换，得到的数列为 19、29、24；当 j 为 1 时，我们发现 29 比 24 大，所以与基准值进行交换，得到的数列 19、24、29，此时 i 为 2，j 为 1；继续 i– 时发现 i 为 1，与 j 相遇，左边部分的数列的 k 为 1，并且左右两部分分别只有一个元素，此时第 2 轮排序的左边部分的排序结束，同时左边部分的所有数据都排序完成。</p>
+<p>我们接着看右边部分的排序，待排序的数列为 78、99、71、47，我们同样选择第 1 个值 78 为基准值，接下来进行 i 与 j 的移动与比较，发现 47 比 78 小，进行交换，得到的数列 47、99、71、78；从左往右发现 99 比基准值 78 大，进行交换，得到的数列为 47、78、71、99；继续从右向左看，发现 71 比基准值 78 小，进行交换，得到的数列为 47、71、78、99。此时 i 在整体<a target="_blank" rel="noopener" href="http://data.biancheng.net/view/181.html">数组</a>中的下标为 6，j 为 5，若继续 j++ 则与 i 相遇，所以完成此轮排序。</p>
+<p>此时右边数列的 k 为 6，一般会是相遇的位置，也就是基准值所在的位置，这时数列又被分为两部分，左边是 47、71，右边是 99，需要继续对左边部分的数据进行排序，虽然只有两个数据，但我们还是继续按照快速排序的思想操作一下，选择 47 作为基准数，将i进行从右向左的移动、比较，发现 i 与 j 相等时没有产生移动，完成第 2 轮排序。</p>
+<p>至此，所有排序都已经完成，最终数列的结果是 19、24、29、47、47、71、78、99。实际上，<strong>快速排序的每一轮处理其实就是将这一轮的基准数归位，直到所有的数都归位为止，排序就结束了。</strong></p>
+<p>要注意 ： <strong>当基准数选择最左边的数字时，那么就应该先从右边开始搜索；当基准数选择最右边的数字时，那么就应该先从左边开始搜索。不论是从小到大排序还是从大到小排序！</strong></p>
+<h2 id="快速排序的特点及性能"><a href="#快速排序的特点及性能" class="headerlink" title="快速排序的特点及性能"></a>快速排序的特点及性能</h2><p> 快速排序之所比较快，因为相比冒泡排序，每次交换是跳跃式的。每次排序的时候设置一个基准点，将小于等于基准点的数全部放到基准点的左边，将大于等于基准点的数全部放到基准点的右边。这样在每次交换的时候就不会像冒泡排序一样每次只能在相邻的数之间进行交换，交换的距离就大的多了。因此总的比较和交换次数就少了，速度自然就提高了。当然在最坏的情况下，仍可能是相邻的两个数进行了交换。因此快速排序的最差时间复杂度和冒泡排序是一样的都是<code>O(n^2)</code>，它的平均时间复杂度为<code>O(nlogn)</code>。而事实上在大多数时候，排序的速度要快于这个平均时间复杂度。这种算法实际上是一种分治法思想，也就是分而治之，把问题分为一个个的小部分来分别解决，再把结果组合起来。</p>
+<p>快速排序只是使用数组原本的空间进行排序，所以所占用的空间应该是常量级的，但是由于每次划分之后是递归调用，所以递归调用在运行的过程中会消耗一定的空间，在一般情况下的<a target="_blank" rel="noopener" href="http://data.biancheng.net/view/2.html">空间复杂度</a>为 <code>O(logn)</code>，在最差的情况下，若每次只完成了一个元素，那么空间复杂度为 <code>O(n)</code>。所以我们一般认为快速排序的空间复杂度为 <code>O(logn)</code>。</p>
+<p>快速排序是一个不稳定的算法，在经过排序之后，可能会对相同值的元素的相对位置造成改变。</p>
+<p>快速排序基本上被认为是相同数量级的所有排序算法中，平均性能最好的。</p>
+<h2 id="快速排序的实现"><a href="#快速排序的实现" class="headerlink" title="快速排序的实现"></a>快速排序的实现</h2><h3 id="基础版"><a href="#基础版" class="headerlink" title="基础版"></a>基础版</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速排序(从小到大)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quickSort</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> right, vector&lt;<span class="type">int</span>&gt;&amp; arr)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 递归出口 : 通过分治使得区间被细分到只有一个元素</span></span><br><span class="line">    <span class="keyword">if</span> (left &gt;= right) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 每次取最左边的数作为基准数</span></span><br><span class="line">    <span class="type">int</span> i = left, j = right; </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 把小于和大于base的数分别移到左半边和右半边</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">        <span class="keyword">while</span> (arr[j] &gt;= arr[left] &amp;&amp; i &lt; j) j--;</span><br><span class="line">        <span class="keyword">while</span> (arr[i] &lt;= arr[left] &amp;&amp; i &lt; j) i++;</span><br><span class="line">        <span class="built_in">swap</span>(arr[i], arr[j]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 退出循环时, i == j</span></span><br><span class="line">    <span class="comment">// 此时 i 和 j 共同指向的位置就是此轮排序完成后, 基准数应该在的位置</span></span><br><span class="line">    <span class="comment">// 4. 基准数归位</span></span><br><span class="line">    <span class="built_in">swap</span>(arr[i], arr[left]);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//5. 分别递归左半边和右半边</span></span><br><span class="line">    <span class="built_in">quickSort</span>(left, i - <span class="number">1</span>, arr);</span><br><span class="line">    <span class="built_in">quickSort</span>(i + <span class="number">1</span>, right, arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="加速版"><a href="#加速版" class="headerlink" title="加速版"></a>加速版</h3><p>每次选择都是选最左边的数, 可以改成随机选择一个数作为基准数</p>
+<h2 id="快速排序题目总结"><a href="#快速排序题目总结" class="headerlink" title="快速排序题目总结"></a>快速排序题目总结</h2><h3 id="剑指-Offer-40-最小的k个数"><a href="#剑指-Offer-40-最小的k个数" class="headerlink" title="剑指 Offer 40. 最小的k个数"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/zui-xiao-de-kge-shu-lcof/">剑指 Offer 40. 最小的k个数</a></h3><p><img src="/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/1612615552-rifQwI-Picture1.png" alt="Picture1.png"></p>
+<p>​								图1 标准的快速排序流程图(图片来自力扣Krahets的题解)</p>
+<p><img src="/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/image-20220608211010865.png" alt="image-20220608211010865"></p>
+<p>​								图2 基于快速排序的数组划分流程图(图片来自力扣Krahets的题解)</p>
+<p>题目只要求返回最小的 k 个数，对这 k 个数的顺序并没有要求。因此，只需要将数组划分为 最小的 k 个数 和 其他数字 两部分即可，而<strong>快速排序的基准数归位</strong>可完成此目标。</p>
+<p>根据快速排序原理，如果某次哨兵划分(基准数归位)后 <strong>基准数正好是第 k+1 小的数字</strong> ，那么此时基准数左边的所有数字便是题目所求的 最小的 k 个数 。</p>
+<p>根据此思路，考虑在每次哨兵划分后，判断基准数在数组中的索引是否等于 k ，若 true 则直接返回此时数组的前 k 个数字即可。如基准数索引大于 k, 则说明第 k 大的数在当前基准数位置的左边, 那么只需要递归左区间, 反之则递归右区间。</p>
+<ul>
+<li><p>&#x3D;&#x3D;快速划分函数算法流程&#x3D;&#x3D; ：</p>
+<ol>
+<li>哨兵划分 ： <ul>
+<li>划分完毕后，基准数为 <code>arr[i]</code> ，左 &#x2F; 右子数组区间分别为 <code>[l, i - 1] </code>, <code>[i + 1, r]</code>；</li>
+</ul>
+</li>
+<li>递归或者返回 ： <ul>
+<li>若 <code>k &lt; i </code>，代表第 <code>k + 1</code> 小的数字在 左子数组 中，则递归左子数组；<br>  若 <code>k &gt; i</code> ，代表第 <code>k + 1</code> 小的数字在 右子数组 中，则递归右子数组；<br>  若 <code>k = i</code> ，代表此时 <code>arr[k]</code> 即为第 <code>k + 1</code> 小的数字，则直接返回数组前 <code>k</code> 个数字即可；</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>&#x3D;&#x3D;快速划分代码实现&#x3D;&#x3D;：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基于快速排序划分数组</span></span><br><span class="line"><span class="comment">// 返回时使数组arr的前k个数为arr中最小的k个数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quickPartition</span><span class="params">(<span class="type">int</span> left, <span class="type">int</span> rignt, <span class="type">int</span> k, vector&lt;<span class="type">int</span>&gt;&amp; arr)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i = left, j = right;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; arr[j] &gt;= arr[left]) j--;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; arr[i] &lt;= arr[left]) i++;</span><br><span class="line">        <span class="built_in">swap</span>(arr[i], arr[j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">swap</span>(arr[i], arr[left]);</span><br><span class="line">    <span class="keyword">if</span> (i &gt; k) <span class="built_in">quickPartition</span>(left, i - <span class="number">1</span>, k, arr);</span><br><span class="line">    <span class="keyword">if</span> (i &lt; k) <span class="built_in">quickPartition</span>(i + <span class="number">1</span>, right, k, arr);</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>此题还可以自建一个大顶堆，利用大顶堆的性质来解决，具体做法在<a href="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93.md">这里</a>的第七节中\</p>
+<h3 id="剑指-Offer-45-把数组排成最小的数"><a href="#剑指-Offer-45-把数组排成最小的数" class="headerlink" title="剑指 Offer 45. 把数组排成最小的数"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/">剑指 Offer 45. 把数组排成最小的数</a></h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">minNumber</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 本质上是一道排序题, 只是排序的方法需要自定义, 考察的是手写快速排序</span></span><br><span class="line">        <span class="comment">// 比较规则: 若 x + y &gt; y + x, 则认为 x 比 y 大, x 应该排在 y 后面</span></span><br><span class="line">        <span class="comment">//          其中 x 和 y 是两个字符串形式的数字, &quot;+&quot; 运算符代表拼接字符串</span></span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">vector&lt;string&gt; <span class="title">strs</span><span class="params">(n)</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            strs[i] = <span class="built_in">to_string</span>(nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">quickSort</span>(strs, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        string ret = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span> (string&amp; str : strs) &#123;</span><br><span class="line">            ret += str;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">quickSort</span><span class="params">(vector&lt;string&gt;&amp; strs, <span class="type">int</span> left, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 递归出口: 区间被细分到只有一个元素</span></span><br><span class="line">        <span class="keyword">if</span> (left &gt;= right) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 每次取左边的数作为基准数, 让其归位</span></span><br><span class="line">        <span class="type">int</span> i = left, j = right;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 把小于和大于base的数分别移到左半边和右半边</span></span><br><span class="line">        <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">            <span class="comment">// 这里是根据题目要求写出的比较规则, 利用了string类对运算符的重载, 非常巧妙</span></span><br><span class="line">            <span class="keyword">while</span> (i &lt; j &amp;&amp; strs[j] + strs[left] &gt;= strs[left] + strs[j]) j--;</span><br><span class="line">            <span class="keyword">while</span> (i &lt; j &amp;&amp; strs[i] + strs[left] &lt;= strs[left] + strs[i]) i++;</span><br><span class="line">            <span class="built_in">swap</span>(strs[i], strs[j]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 退出循环时, i == j</span></span><br><span class="line">        <span class="comment">// 此时 i 和 j 共同指向的位置就是此轮排序完成后, 基准数应该在的位置</span></span><br><span class="line">        <span class="comment">// 4. 基准数归位</span></span><br><span class="line">        <span class="built_in">swap</span>(strs[i], strs[left]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 分别递归左半区间和右半区间</span></span><br><span class="line">        <span class="built_in">quickSort</span>(strs, left, i - <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">quickSort</span>(strs, i + <span class="number">1</span>, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="215-数组中的第K个最大元素"><a href="#215-数组中的第K个最大元素" class="headerlink" title="215. 数组中的第K个最大元素"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-largest-element-in-an-array/">215. 数组中的第K个最大元素</a></h3><h3 id="347-前-K-个高频元素"><a href="#347-前-K-个高频元素" class="headerlink" title="347. 前 K 个高频元素"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/top-k-frequent-elements/">347. 前 K 个高频元素</a></h3><p>未完待续…</p>
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="青色的豆子 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="青色的豆子 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>青色的豆子
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/06/24/%E4%BB%8E%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%88%B0%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/" title="从冒泡排序到快速排序">http://example.com/2022/06/24/从冒泡排序到快速排序/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/" rel="prev" title="归并排序简述">
+      <i class="fa fa-chevron-left"></i> 归并排序简述
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">冒泡排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">冒泡排序的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">冒泡排序的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E7%9A%84%E7%89%B9%E7%82%B9%E5%8F%8A%E6%80%A7%E8%83%BD"><span class="nav-number">1.3.</span> <span class="nav-text">冒泡排序的特点及性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.</span> <span class="nav-text">冒泡排序的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%8E%9F%E5%A7%8B%E7%89%88"><span class="nav-number">1.4.1.</span> <span class="nav-text">冒泡排序原始版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E4%BC%98%E5%8C%96%E7%89%88"><span class="nav-number">1.4.2.</span> <span class="nav-text">冒泡排序优化版</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">快速排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">快速排序的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">快速排序的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%9A%84%E7%89%B9%E7%82%B9%E5%8F%8A%E6%80%A7%E8%83%BD"><span class="nav-number">2.3.</span> <span class="nav-text">快速排序的特点及性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.4.</span> <span class="nav-text">快速排序的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%89%88"><span class="nav-number">2.4.1.</span> <span class="nav-text">基础版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E9%80%9F%E7%89%88"><span class="nav-number">2.4.2.</span> <span class="nav-text">加速版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E9%A2%98%E7%9B%AE%E6%80%BB%E7%BB%93"><span class="nav-number">2.5.</span> <span class="nav-text">快速排序题目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%91%E6%8C%87-Offer-40-%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0"><span class="nav-number">2.5.1.</span> <span class="nav-text">剑指 Offer 40. 最小的k个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%91%E6%8C%87-Offer-45-%E6%8A%8A%E6%95%B0%E7%BB%84%E6%8E%92%E6%88%90%E6%9C%80%E5%B0%8F%E7%9A%84%E6%95%B0"><span class="nav-number">2.5.2.</span> <span class="nav-text">剑指 Offer 45. 把数组排成最小的数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#215-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACK%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0"><span class="nav-number">2.5.3.</span> <span class="nav-text">215. 数组中的第K个最大元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#347-%E5%89%8D-K-%E4%B8%AA%E9%AB%98%E9%A2%91%E5%85%83%E7%B4%A0"><span class="nav-number">2.5.4.</span> <span class="nav-text">347. 前 K 个高频元素</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="青色的豆子"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">青色的豆子</p>
+  <div class="site-description" itemprop="description">杨花榆荚无才思，惟解漫天作雪飞</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangxinyuan07" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhangxinyuan07" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zxy1079669873@gmail.com" title="E-Mail → mailto:zxy1079669873@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-06 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">青色的豆子</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共15.8k字</span>
+</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-shizuku"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
+
