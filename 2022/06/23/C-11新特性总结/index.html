@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="C++11新特性初始化列表 C++11初始化列表(initializer_list)可用于所有内置类型和类对象 初始化列表语法可防止缩窄, 禁止将数值赋给无法存储它的变量 STL容器提供了将initializer_list作为参数的构造函数  声明 auto  用于实现自动类型推断,要求变量进行显示初始化,否则无法推导出类型  auto一行定义多个变量时,各个变量的推导不能产生二义性  auto不">
+  <meta name="description" content="C++11新特性初始化列表 C++11初始化列表(initializer_list)可用于所有内置类型和类对象 初始化列表语法可防止缩窄, 禁止将数值赋给无法存储它的变量 STL容器提供了将initializer_list作为参数的构造函数  声明 auto  用于实现自动类型推断,要求变量进行显示初始化,否则无法推导出类型 auto一行定义多个变量时,各个变量的推导不能产生二义性 auto不能用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++11新特性总结">
 <meta property="og:url" content="http://example.com/2022/06/23/C-11%E6%96%B0%E7%89%B9%E6%80%A7%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="蘅芜苑">
-<meta property="og:description" content="C++11新特性初始化列表 C++11初始化列表(initializer_list)可用于所有内置类型和类对象 初始化列表语法可防止缩窄, 禁止将数值赋给无法存储它的变量 STL容器提供了将initializer_list作为参数的构造函数  声明 auto  用于实现自动类型推断,要求变量进行显示初始化,否则无法推导出类型  auto一行定义多个变量时,各个变量的推导不能产生二义性  auto不">
+<meta property="og:description" content="C++11新特性初始化列表 C++11初始化列表(initializer_list)可用于所有内置类型和类对象 初始化列表语法可防止缩窄, 禁止将数值赋给无法存储它的变量 STL容器提供了将initializer_list作为参数的构造函数  声明 auto  用于实现自动类型推断,要求变量进行显示初始化,否则无法推导出类型 auto一行定义多个变量时,各个变量的推导不能产生二义性 auto不能用">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-06-23T09:11:10.000Z">
-<meta property="article:modified_time" content="2022-06-23T09:11:54.070Z">
+<meta property="article:modified_time" content="2022-06-24T08:16:46.460Z">
 <meta property="article:author" content="青色的豆子">
 <meta name="twitter:card" content="summary">
 
@@ -188,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-23 17:11:10 / 修改时间：17:11:54" itemprop="dateCreated datePublished" datetime="2022-06-23T17:11:10+08:00">2022-06-23</time>
+              <time title="创建时间：2022-06-23 17:11:10" itemprop="dateCreated datePublished" datetime="2022-06-23T17:11:10+08:00">2022-06-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-24 16:16:46" itemprop="dateModified" datetime="2022-06-24T16:16:46+08:00">2022-06-24</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -219,24 +225,15 @@
 <h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><ol>
 <li><p><code>auto</code></p>
 <ul>
-<li><p>用于实现自动类型推断,要求变量进行显示初始化,否则无法推导出类型</p>
-</li>
-<li><p>auto一行定义多个变量时,各个变量的推导不能产生二义性</p>
-</li>
-<li><p>auto不能用作函数参数</p>
-</li>
-<li><p>类中auto不能用作非静态成员变量</p>
-</li>
-<li><p>不能定义数组,可以定义指针</p>
-</li>
-<li><p>无法推导出模板参数</p>
-</li>
-<li><p>不声明为引用或指针时,auto会忽略等号右边的引用类型和cv限定</p>
-</li>
-<li><p>声明为引用或指针时,auto会保留等号右边的引用类型和cv限定</p>
-</li>
-<li><p>可以简化模板声明</p>
-</li>
+<li>用于实现自动类型推断,要求变量进行显示初始化,否则无法推导出类型</li>
+<li>auto一行定义多个变量时,各个变量的推导不能产生二义性</li>
+<li>auto不能用作函数参数<span id="more"></span></li>
+<li>类中auto不能用作非静态成员变量</li>
+<li>不能定义数组,可以定义指针</li>
+<li>无法推导出模板参数</li>
+<li>不声明为引用或指针时,auto会忽略等号右边的引用类型和cv限定</li>
+<li>声明为引用或指针时,auto会保留等号右边的引用类型和cv限定</li>
+<li>可以简化模板声明</li>
 </ul>
 </li>
 <li><p><code>decltype</code></p>
@@ -330,12 +327,12 @@
 <p>  如果换成<code>unique_ptr</code>程序不会等到运行阶段崩溃,而是在编译阶段因为<code>p2 = p1</code>的操作而报错.编译器会认为该语句非法,因此**<code>unique_ptr比auto_ptr更安全</code><strong>(编译阶段错误比潜在的程序崩溃更安全).</strong><code>unique_ptr</code>禁用了拷贝和赋值运算符**. &#x3D;&#x3D;(区别1)&#x3D;&#x3D;</p>
 </blockquote>
 <p>情况2:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function">unique_ptr&lt;string&gt; <span class="title">pu1</span><span class="params">(<span class="keyword">new</span> string <span class="string">&quot;AAA&quot;</span>)</span></span>;</span><br><span class="line">unique_ptr&lt;string&gt; pu2;</span><br><span class="line">pu2 = pu1; <span class="comment">// #1 编译器认为该语句非法, 不允许</span></span><br><span class="line">unique_ptr&lt;string&gt; pu3;</span><br><span class="line">pu3 = <span class="built_in">unique_ptr</span>&lt;string&gt; (<span class="keyword">new</span> string <span class="string">&quot;BBB&quot;</span>); <span class="comment">// #2 用临时对象赋给unique_ptr, 允许</span></span><br><span class="line"></span><br><span class="line">pu2 = <span class="built_in">move</span>(pu1); <span class="comment">// #3 合法且安全的操作, 允许</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function">unique_ptr&lt;string&gt; <span class="title">pu1</span><span class="params">(<span class="keyword">new</span> string <span class="string">&quot;AAA&quot;</span>)</span></span>;</span><br><span class="line">unique_ptr&lt;string&gt; pu2;</span><br><span class="line">pu2 = pu1; <span class="comment">// #1 编译器认为该语句非法, 不允许</span></span><br><span class="line">unique_ptr&lt;string&gt; pu3;</span><br><span class="line">pu3 = <span class="built_in">unique_ptr</span>&lt;string&gt; (<span class="keyword">new</span> string <span class="string">&quot;BBB&quot;</span>); <span class="comment">// #2 用临时对象赋给unique_ptr, 允许</span></span><br><span class="line">        </span><br><span class="line">pu2 = <span class="built_in">move</span>(pu1); <span class="comment">// #3 合法且安全的操作, 允许</span></span><br></pre></td></tr></table></figure>
 
 <p>如语句#2所示,程序将一个(源)<code>unique_ptr</code>对象赋给另一个(目的)时,<strong>若源<code>unique_ptr</code>是个临时右值,则编译器允许</strong>.如果确实想执行语句#1的操作,如语句#3所示,可以使用<code>std::move()</code>函数.<code>unique_ptr</code>使用C++11新增的<strong>移动构造函数和右值引用</strong>来区分#1和#3这两种不安全和安全的用法.&#x3D;&#x3D;区别2&#x3D;&#x3D;</p>
 <p><code>auto_ptr</code>使用delete而不是delete [],因此只能与new搭配,不能与new []搭配.而**<code>unique_ptr</code>有new []和delete []版本.**&#x3D;&#x3D;区别3&#x3D;&#x3D;</p>
 <p>情况3:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// unique_ptr可以作为返回值, 返回动态申请的内存的所有权</span></span><br><span class="line"><span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">make_int</span><span class="params">(<span class="type">int</span> n)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">unique_ptr</span>&lt;<span class="type">int</span>&gt;(<span class="keyword">new</span> <span class="type">int</span> n); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果这里不是引用传递, 而是按值传递, for_each语句将非法, 原因在下面</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">(unique_ptr&lt;<span class="type">int</span>&gt; &amp; pi)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; *a &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">...</span><br><span class="line">    <span class="comment">// 可以把unique_ptr存储到STL容器中, 只要不调用将一个unique_ptr复制或赋值给另一个的方法或算法(如sort()), 上面的show函数如果用值传递, 就犯了这种错误</span></span><br><span class="line">    vector&lt;unique_ptr&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">vp</span>(size);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; vp.<span class="built_in">size</span>(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        vp[i] = <span class="built_in">make_int</span>(<span class="built_in">rand</span>() % <span class="number">1000</span>); <span class="comment">// 拷贝临时unique_ptr指针</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// push_back()返回一个临时unique_ptr, 赋给vp中的一个unique_ptr, 合法</span></span><br><span class="line">    vp.<span class="built_in">push_back</span>(<span class="built_in">make_int</span>(<span class="built_in">rand</span>() % <span class="number">1000</span>)); </span><br><span class="line">    for_each(vp.<span class="built_in">begin</span>(), vp.<span class="built_in">end</span>(), show);</span><br><span class="line">    </span><br><span class="line">    <span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">pup</span><span class="params">(make_int(rand() % <span class="number">1000</span>))</span></span>;</span><br><span class="line">    <span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">spp</span><span class="params">(pup)</span></span>; <span class="comment">// 这是非法的, pup是个左值</span></span><br><span class="line">    <span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">spr</span><span class="params">(make_int(rand() % <span class="number">1000</span>))</span></span>; <span class="comment">// 合法的, pup是右值</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// unique_ptr可以作为返回值, 返回动态申请的内存的所有权</span></span><br><span class="line"><span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">make_int</span><span class="params">(<span class="type">int</span> n)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">unique_ptr</span>&lt;<span class="type">int</span>&gt;(<span class="keyword">new</span> <span class="type">int</span> n); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果这里不是引用传递, 而是按值传递, for_each语句将非法, 原因在下面</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">(unique_ptr&lt;<span class="type">int</span>&gt; &amp; pi)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; *a &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">...</span><br><span class="line">    <span class="comment">// 可以把unique_ptr存储到STL容器中, 只要不调用将一个unique_ptr复制或赋值给另一个的方法或算法(如sort()), 上面的show函数如果用值传递, 就犯了这种错误</span></span><br><span class="line">    vector&lt;unique_ptr&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">vp</span>(size);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; vp.<span class="built_in">size</span>(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        vp[i] = <span class="built_in">make_int</span>(<span class="built_in">rand</span>() % <span class="number">1000</span>); <span class="comment">// 拷贝临时unique_ptr指针</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// push_back()返回一个临时unique_ptr, 赋给vp中的一个unique_ptr, 合法</span></span><br><span class="line">    vp.<span class="built_in">push_back</span>(<span class="built_in">make_int</span>(<span class="built_in">rand</span>() % <span class="number">1000</span>)); </span><br><span class="line">    for_each(vp.<span class="built_in">begin</span>(), vp.<span class="built_in">end</span>(), show);</span><br><span class="line">            </span><br><span class="line">    <span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">pup</span><span class="params">(make_int(rand() % <span class="number">1000</span>))</span></span>;</span><br><span class="line">    <span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">spp</span><span class="params">(pup)</span></span>; <span class="comment">// 这是非法的, pup是个左值</span></span><br><span class="line">    <span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">spr</span><span class="params">(make_int(rand() % <span class="number">1000</span>))</span></span>; <span class="comment">// 合法的, pup是右值</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>虽然<strong>禁用了拷贝构造和赋值运算符</strong>，但**<code>unique_ptr</code>可以作为返回值，用于从某个函数中返回动态申请内存的所有权**，本质上是移动拷贝，就是使用<code>std:move()</code>函数，将所有权转移。</p>
 <p><code>unique_ptr</code>是右值时, 可以将其赋给<code>shared_ptr</code>, 如上面代码块中最后一行代码所示.</p>
@@ -475,13 +472,6 @@
 
 
         
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2022/06/22/hello-world/" rel="prev" title="Hello World">
-      <i class="fa fa-chevron-left"></i> Hello World
-    </a></div>
-      <div class="post-nav-item"></div>
-    </div>
       </footer>
     
   </article>
@@ -555,7 +545,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">1</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -602,7 +592,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共3.5k字</span>
+  <span class="post-count">博客全站共3.4k字</span>
 </div>
 
 
@@ -712,5 +702,6 @@ $(document).ready(function() {
 
   
 
-</body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-shizuku"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
 </html>
+
