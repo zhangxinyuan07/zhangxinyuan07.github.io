@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-me.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-me.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-me.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="归并排序归并排序的概念归并排序，是创建在归并操作上的一种有效的排序算法。算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。归并排序思路简单，速度仅次于快速排序，为稳定排序算法，一般用于对总体无序，但是各子项相对有序的数列。 归并排序基于分治算法。最容易想到的实现方式是自顶向下的递归实现, 自顶向下归并排序的递归调用的栈空间大小为 O(logn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="归并排序简述">
+<meta property="og:url" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/index.html">
+<meta property="og:site_name" content="蘅芜苑">
+<meta property="og:description" content="归并排序归并排序的概念归并排序，是创建在归并操作上的一种有效的排序算法。算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。归并排序思路简单，速度仅次于快速排序，为稳定排序算法，一般用于对总体无序，但是各子项相对有序的数列。 归并排序基于分治算法。最容易想到的实现方式是自顶向下的递归实现, 自顶向下归并排序的递归调用的栈空间大小为 O(logn">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png">
+<meta property="og:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-2034-20161218194508761-468169540.png">
+<meta property="og:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-7614-20161218194621308-588010220.png">
+<meta property="article:published_time" content="2022-06-24T10:54:21.000Z">
+<meta property="article:modified_time" content="2022-06-24T10:57:24.899Z">
+<meta property="article:author" content="青色的豆子">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png">
+
+<link rel="canonical" href="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>归并排序简述 | 蘅芜苑</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">蘅芜苑</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/home/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="青色的豆子">
+      <meta itemprop="description" content="杨花榆荚无才思，惟解漫天作雪飞">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="蘅芜苑">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          归并排序简述
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-24 18:54:21 / 修改时间：18:57:24" itemprop="dateCreated datePublished" datetime="2022-06-24T18:54:21+08:00">2022-06-24</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h1><h2 id="归并排序的概念"><a href="#归并排序的概念" class="headerlink" title="归并排序的概念"></a>归并排序的概念</h2><p>归并排序，是创建在归并操作上的一种有效的排序算法。算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。归并排序思路简单，速度仅次于快速排序，为稳定排序算法，一般用于对总体无序，但是各子项相对有序的数列。</p>
+<p>归并排序基于分治算法。最容易想到的实现方式是<strong>自顶向下</strong>的递归实现, 自顶向下归并排序的递归调用的栈空间大小为 <code>O(logn)</code>。</p>
+<p>如果要使递归栈达到 <code>O(1)</code> 的空间复杂度，则需要使用<strong>自底向上</strong>的实现方式。</p>
+<p>归并排序和选择排序一样，归并排序的性能不受输入数据的影响，但表现比选择排序好的多，因为始终都是 <code>O(nlogn)</code> 的时间复杂度。代价是需要额外的内存空间: 合并过程中的辅助数组:<code>O(n)</code> + 递归栈 <code>O(logn)</code> &#x3D; <code>O(n)</code>。<span id="more"></span></p>
+<h2 id="归并排序的原理"><a href="#归并排序的原理" class="headerlink" title="归并排序的原理"></a>归并排序的原理</h2><p><img src="/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-5066-20161218163120151-452283750.png" alt="img"></p>
+<p>**<code>分</code>**的过程可以用递归实现</p>
+<p>**<code>治</code>**的过程需要将两个已经有序的子序列合并成一个有序序列, 步骤如下:</p>
+<p><img src="/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-2034-20161218194508761-468169540.png" alt="img"></p>
+<p><img src="/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/1557906108-7614-20161218194621308-588010220.png" alt="img"></p>
+<h2 id="归并排序的实现"><a href="#归并排序的实现" class="headerlink" title="归并排序的实现"></a>归并排序的实现</h2><h3 id="递归法-自顶向下"><a href="#递归法-自顶向下" class="headerlink" title="递归法(自顶向下)"></a>递归法(自顶向下)</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序(C++递归)</span></span><br><span class="line"><span class="comment">// [start, mid] 和 [mid + 1, end]这对子区间是排好序的, 现在需要合并 </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; vec, vector&lt;<span class="type">int</span>&gt;&amp; tmp, <span class="type">int</span> start, <span class="type">int</span> mid, <span class="type">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 给两个子区间换个名字: [start1, end1] 和 [start2, end2]</span></span><br><span class="line">    <span class="type">int</span> start1 = start, end1 = mid;</span><br><span class="line">    <span class="type">int</span> start2 = mid + <span class="number">1</span>, end2 = end;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把两个有序子区间代表的数组合并成一个有序数组, 放在tmp数组里</span></span><br><span class="line">    <span class="comment">// 这里的做法和合并两个有序链表就是一个思路了</span></span><br><span class="line">    <span class="type">int</span> i = start;</span><br><span class="line">    <span class="keyword">while</span> (start1 &lt;= end1 &amp;&amp; start2 &lt;= end2)</span><br><span class="line">        tmp[i++] = vec[start1] &lt;= vec[start2] ? vec[start1++] : vec[start2++];</span><br><span class="line">    <span class="keyword">while</span> (start1 &lt;= end1)</span><br><span class="line">        tmp[i++] = vec[start1++];</span><br><span class="line">    <span class="keyword">while</span> (start2 &lt;= end2)</span><br><span class="line">        tmp[i++] = vec[start2++];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再把合并好的有序数组写回vec的相应位置里, 不写的话vec还是没有改动</span></span><br><span class="line">    <span class="built_in">copy</span>(tmp.<span class="built_in">begin</span>() + start, tmp.<span class="built_in">begin</span>() + end + <span class="number">1</span>, vec.<span class="built_in">begin</span>() + start);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要在主函数中自己定义一个和vec一样大小的tmp数组</span></span><br><span class="line"><span class="comment">// 当然也可以封装到归并排序函数里, 不靠用户创建, 但这样每层递归都要创建数组, 效率不高</span></span><br><span class="line"><span class="comment">// 左闭右闭区间, end 传入的是 vec.size() - 1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MergeSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; vec, vector&lt;<span class="type">int</span>&gt;&amp; tmp, <span class="type">int</span> start, <span class="type">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (start &gt;= end)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> mid = (end - start) / <span class="number">2</span> + start;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分</span></span><br><span class="line">    <span class="built_in">MergeSort</span>(vec, tmp, start, mid);</span><br><span class="line">    <span class="built_in">MergeSort</span>(vec, tmp, mid + <span class="number">1</span>, end);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 治</span></span><br><span class="line">    <span class="built_in">Merge</span>(vec, tmp, start, mid, end);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="迭代法-自底向上"><a href="#迭代法-自底向上" class="headerlink" title="迭代法(自底向上)"></a>迭代法(自底向上)</h3><p>递归的时候，并没有做什么特别的事，只是从中间分成两半，每一半做排序，最后合并起来，是后序遍历，从叶子节点往回看：</p>
+<ol>
+<li>区间的长度都为1，直接返回，不用合并；</li>
+<li>区间的长度为2，两个子区间都排好序了，将它们合并起来；</li>
+<li>区间的长度为4，两个子区间都排好序了，将它们合并起来；</li>
+<li>……</li>
+</ol>
+<p>从上面的分析可以看出，其实只需要枚举步长1,2,4,……，对由每个步长分开的一对区间，都合并一下。<br>比如，一开始数组为[8 7 6 5 4 3 2 1]。<br>第一遍，步长为1，将相邻的两个区间合并：<br><code>7 8</code> 6 5 4 3 2 1<br>7 8 <code>5 6</code> 4 3 2 1<br>7 8 5 6 <code>3 4</code> 2 1<br>7 8 5 6 3 4 <code>1 2</code></p>
+<p>第二遍，步长为2，将相邻的两个区间合并：<br><code>5 6 7 8</code> 3 4 1 2<br>5 6 7 8 <code>1 2 3 4</code></p>
+<p>第三遍，步长为4，将相邻的两个区间合并：<br><code>1 2 3 4 5 6 7 8</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 归并排序(C++迭代)</span></span><br><span class="line"><span class="comment">// [start, mid] 和 [mid + 1, end]这对子区间是排好序的, 现在需要合并</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;vec, vector&lt;<span class="type">int</span>&gt; &amp;tmp, <span class="type">int</span> start, <span class="type">int</span> mid, <span class="type">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 给两个子区间换个名字: [start1, end1] 和 [start2, end2]</span></span><br><span class="line">    <span class="type">int</span> start1 = start, end1 = mid;</span><br><span class="line">    <span class="type">int</span> start2 = mid + <span class="number">1</span>, end2 = end;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把两个有序子区间代表的数组合并成一个有序数组, 放在tmp数组里</span></span><br><span class="line">    <span class="comment">// 这里的做法和合并两个有序链表就是一个思路了</span></span><br><span class="line">    <span class="type">int</span> i = start;</span><br><span class="line">    <span class="keyword">while</span> (start1 &lt;= end1 &amp;&amp; start2 &lt;= end2)</span><br><span class="line">        tmp[i++] = vec[start1] &lt;= vec[start2] ? vec[start1++] : vec[start2++];</span><br><span class="line">    <span class="keyword">while</span> (start1 &lt;= end1)</span><br><span class="line">        tmp[i++] = vec[start1++];</span><br><span class="line">    <span class="keyword">while</span> (start2 &lt;= end2)</span><br><span class="line">        tmp[i++] = vec[start2++];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再把合并好的有序数组写回vec的相应位置里, 不写的话vec还是没有改动</span></span><br><span class="line">    <span class="built_in">copy</span>(tmp.<span class="built_in">begin</span>() + start, tmp.<span class="built_in">begin</span>() + end + <span class="number">1</span>, vec.<span class="built_in">begin</span>() + start);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MergeSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;vec)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> n = vec.<span class="built_in">size</span>();</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">tmp</span><span class="params">(n)</span></span>;</span><br><span class="line">    <span class="comment">// 自顶向下的递归法是先把数组不断二分, 直到子数组大小为1</span></span><br><span class="line">    <span class="comment">// 自底向上的迭代法则是子数组大小从1开始, 每次大小翻倍直到n</span></span><br><span class="line">    <span class="comment">// step则是步长, 或者说子数组大小</span></span><br><span class="line">    <span class="comment">// 倍进枚举步长1, 2, 4,...</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> step = <span class="number">1</span>; step &lt; n; step += step)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 每次把相邻的一对区间合并, start指的是这一对区间的起点</span></span><br><span class="line">        <span class="comment">// 合并完后向后走两个步长(offset), 到达下一对区间的起点</span></span><br><span class="line">        <span class="type">int</span> offset = step + step;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> start = <span class="number">0</span>; start &lt; n; start += offset)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> mid = <span class="built_in">min</span>(start + step - <span class="number">1</span>, n - <span class="number">1</span>);</span><br><span class="line">            <span class="comment">// 左闭右闭区间, start + offset 是下一对区间的起点</span></span><br><span class="line">            <span class="comment">// 再减一才是当前这一对区间的end</span></span><br><span class="line">            <span class="type">int</span> end = <span class="built_in">min</span>(start + offset - <span class="number">1</span>, n - <span class="number">1</span>);</span><br><span class="line">            <span class="built_in">Merge</span>(vec, tmp, start, mid, end);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="归并排序题目总结"><a href="#归并排序题目总结" class="headerlink" title="归并排序题目总结"></a>归并排序题目总结</h2><h3 id="148-排序链表"><a href="#148-排序链表" class="headerlink" title="148. 排序链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/sort-list/">148. 排序链表</a></h3><p>这道题考察了 : </p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-two-sorted-lists/">21. 合并两个有序链表</a></li>
+<li>找到链表中点</li>
+<li>排序的时间复杂度</li>
+<li>归并排序的实现(<strong>递归</strong>的实现)</li>
+</ol>
+<p>把拆分链表、合并链表、递归排序拆开写， 思路更清晰，更有利于掌控代码</p>
+<p><strong>真是道好题!</strong></p>
+<ol>
+<li>自顶向下</li>
+</ol>
+<ul>
+<li><p>对链表自顶向下归并排序的过程如下 : </p>
+<p>  找到链表的中点，以中点为分界，将链表拆分成两个子链表。寻找链表的中点可以使用快慢指针的做法，快指针每次移动 2 步，慢指针每次移动 1 步，当快指针到达链表末尾时，慢指针指向的链表节点即为链表的中点。</p>
+<p>  对两个子链表分别排序。</p>
+<p>  将两个排序后的子链表合并，得到完整的排序后的链表。可以使用 <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-two-sorted-lists/">21. 合并两个有序链表</a> 的做法，将两个有序的子链表进行合并。</p>
+<p>  上述过程可以通过递归实现。递归的终止条件是链表的节点个数小于或等于 1，即当链表为空或者链表只包含 1 个节点时，不需要对链表进行拆分和排序。</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode() : val(0), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x, ListNode *next) : val(x), next(next) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">sortList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">realSortFunc</span>(head);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">splitList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 传入要被二等分的链表头节点head, 对链表进行二等分, 返回二等分后第二个链表的头节点</span></span><br><span class="line"></span><br><span class="line">        ListNode* dummyHead = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>, head);</span><br><span class="line">        <span class="comment">// slow指向head前面的节点, 这样while循环结束后slow的下一个节点就是中点, 方便操作</span></span><br><span class="line">        ListNode* fast = head, * slow = dummyHead; </span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast-&gt;next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            fast = fast-&gt;next-&gt;next;</span><br><span class="line">            slow = slow-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode* newHead = slow-&gt;next;</span><br><span class="line">        slow-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">        <span class="keyword">return</span> newHead;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">ListNode* <span class="title">mergeTwoLists</span><span class="params">(ListNode* head1, ListNode* head2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 合并两个有序链表, 返回合并后的链表头节点, 合并后链表依然有序</span></span><br><span class="line"></span><br><span class="line">        ListNode* dummyHead = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>); <span class="comment">// 头部保留, 最后返回用</span></span><br><span class="line">        ListNode* tail = dummyHead; <span class="comment">// 表示结果链表的尾部, 下面要把节点依次往尾部添加</span></span><br><span class="line"></span><br><span class="line">        ListNode* p1 = head1, * p2 = head2;</span><br><span class="line">        <span class="keyword">while</span> (p1 != <span class="literal">nullptr</span> &amp;&amp; p2 != <span class="literal">nullptr</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (p1-&gt;val &gt;= p2-&gt;val) &#123;</span><br><span class="line">                tail-&gt;next = p2;</span><br><span class="line">                p2 = p2-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                tail-&gt;next = p1;</span><br><span class="line">                p1 = p1-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            tail = tail-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// while 结束代表两个链表其中一个遍历完了</span></span><br><span class="line">        <span class="comment">// 这时把另一个链表剩余部分直接接到结果链表尾部去</span></span><br><span class="line">        <span class="keyword">if</span> (p1 == <span class="literal">nullptr</span>) tail-&gt;next = p2;</span><br><span class="line">        <span class="keyword">else</span> tail-&gt;next = p1;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummyHead-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">ListNode* <span class="title">realSortFunc</span><span class="params">(ListNode* head)</span>  </span>&#123;</span><br><span class="line">        <span class="comment">// 真正的排序函数, 对传入的head链表进行排序, 返回排序完成后的链表</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">nullptr</span> || head-&gt;next == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 每一层的逻辑很简单 :</span></span><br><span class="line">        <span class="comment">// 1. 拆分链表</span></span><br><span class="line">        ListNode* anotherHead = <span class="built_in">splitList</span>(head);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 把拆分后的两个链表进行排序, 得到两个有序子链表</span></span><br><span class="line">        ListNode* head1 = <span class="built_in">realSortFunc</span>(head);</span><br><span class="line">        ListNode* head2 = <span class="built_in">realSortFunc</span>(anotherHead);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 排序完成后对两个有序子链表合并得到最终链表</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">mergeTwoLists</span>(head1, head2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度：$O(nlogn)$，其中 $n$ 是链表的长度。</p>
+<p>空间复杂度：$O(logn)$，其中 $n$ 是链表的长度。空间复杂度主要取决于递归调用的栈空间。</p>
+<ol start="2">
+<li>自底向上</li>
+</ol>
+<ul>
+<li><p>使用自底向上的方法实现归并排序，则可以达到 O(1) 的空间复杂度。</p>
+<p>  首先求得链表的长度 length，然后将链表拆分成子链表进行合并。</p>
+<p>  具体做法如下。</p>
+<p>  用 subLength 表示每次需要排序的子链表的长度，初始时 subLength &#x3D; 1。</p>
+<p>  每次将链表拆分成若干个长度为 subLength 的子链表（最后一个子链表的长度可以小于 subLength），按照每两个子链表一组进行合并，合并后即可得到若干个长度为 subLength × 2 的有序子链表（最后一个子链表的长度可以小于 subLength × 2）。合并两个子链表仍然使用 <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-two-sorted-lists/">21. 合并两个有序链表</a>  的做法。</p>
+<p>  将 subLength 的值加倍，重复第 2 步，对更长的有序子链表进行合并操作，直到有序子链表的长度大于或等于 length，整个链表排序完毕。</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode() : val(0), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x, ListNode *next) : val(x), next(next) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">sortList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> length = <span class="built_in">getLength</span>(head);</span><br><span class="line">        <span class="keyword">if</span>(length &lt;= <span class="number">1</span>) <span class="keyword">return</span> head;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 每次把链表拆分成若干个长度为subLen的子链表</span></span><br><span class="line">        <span class="comment">// 对每个子链表进行两两合并(合并完就是有序的)</span></span><br><span class="line">        <span class="comment">// 每次全部合并完, subLength变为之前的两倍</span></span><br><span class="line">        <span class="comment">// 然后继续合并若干个长度为subLength * 2的有序子链表, 直到全部合并完</span></span><br><span class="line">        <span class="comment">// z</span></span><br><span class="line">        ListNode* dummyHead = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>, head);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> subLength = <span class="number">1</span>; subLength &lt; length; subLength &lt;&lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            ListNode* prev = dummyHead, *curr = dummyHead-&gt;next;</span><br><span class="line">            <span class="keyword">while</span> (curr != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                ListNode* head1 = curr;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; subLength &amp;&amp; curr-&gt;next != <span class="literal">nullptr</span>; i++) &#123;</span><br><span class="line">                    curr = curr-&gt;next;</span><br><span class="line">                &#125;</span><br><span class="line">                ListNode* head2 = curr-&gt;next;</span><br><span class="line">                curr-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">                curr = head2;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; subLength &amp;&amp; curr != <span class="literal">nullptr</span> &amp;&amp; curr-&gt;next != <span class="literal">nullptr</span>; i++) &#123;</span><br><span class="line">                    curr = curr-&gt;next;</span><br><span class="line">                &#125;</span><br><span class="line">                ListNode* next = <span class="literal">nullptr</span>;</span><br><span class="line">                <span class="keyword">if</span> (curr != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                    next = curr-&gt;next;</span><br><span class="line">                    curr-&gt;next = <span class="literal">nullptr</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                ListNode* merged = <span class="built_in">mergeTwoLists</span>(head1, head2);</span><br><span class="line">                prev-&gt;next = merged;</span><br><span class="line">                <span class="keyword">while</span> (prev-&gt;next != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                    prev = prev-&gt;next;</span><br><span class="line">                &#125;</span><br><span class="line">                curr = next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyHead-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面这些都是自己写的, 也比较简单</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getLength</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">        ListNode* cur = head;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            cur = cur-&gt;next;</span><br><span class="line">            len++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">ListNode* <span class="title">mergeTwoLists</span><span class="params">(ListNode* head1, ListNode* head2)</span> </span>&#123;</span><br><span class="line">        ListNode* dummyHead = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">-1</span>);</span><br><span class="line">        ListNode* tail = dummyHead;</span><br><span class="line"></span><br><span class="line">        ListNode* p1 = head1, * p2 = head2;</span><br><span class="line">        <span class="keyword">while</span> (p1 &amp;&amp; p2) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p1-&gt;val &gt;= p2-&gt;val) &#123;</span><br><span class="line">                tail-&gt;next = p2;</span><br><span class="line">                p2 = p2-&gt;next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tail-&gt;next = p1;</span><br><span class="line">                p1 = p1-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            tail = tail-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        tail-&gt;next = p1 ? p1 : p2;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummyHead-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="剑指-Offer-51-数组中的逆序对"><a href="#剑指-Offer-51-数组中的逆序对" class="headerlink" title="剑指 Offer 51. 数组中的逆序对"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/shu-zu-zhong-de-ni-xu-dui-lcof/">剑指 Offer 51. 数组中的逆序对</a></h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">reversePairs</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 刚开始用冒泡排序做了一次, 每次swap的时候, 说明有一个逆序对, ans++</span></span><br><span class="line">        <span class="comment">// 但冒泡排序是两重for循环, 和暴力求解没区别, 超时了</span></span><br><span class="line">        <span class="comment">// 所以考虑换成归并排序, 减少时间复杂度</span></span><br><span class="line">        <span class="comment">// 但难点在于, 归并排序的过程中, 什么时候能知道有逆序对?</span></span><br><span class="line">        <span class="comment">// 归并排序是先&quot;分&quot;后&quot;治&quot;</span></span><br><span class="line">        <span class="comment">// &quot;分&quot;的过程肯定不会提供逆序对, 重点就在&quot;治&quot;的过程</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 考虑分治的过程中碰到了下面两个有序数组要合并 : </span></span><br><span class="line">        <span class="comment">// [5, 6, 7, 8] 和 [1, 2, 3, 4]</span></span><br><span class="line">        <span class="comment">// 显然, 这两个数组贡献了 4 * 4 = 16 个逆序对</span></span><br><span class="line">        <span class="comment">// 也就是说, 先看左边数组中的5, 然后看右边有几个比5小, 再看6...</span></span><br><span class="line">        <span class="comment">// 这个过程正是分治的时候用双指针合并有序数组的过程 </span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 再看下面这个例子 : </span></span><br><span class="line">        <span class="comment">// [4, 7, 8, 9, 10] 和 [1, 2, 3, 5, 6]</span></span><br><span class="line">        <span class="comment">// 合并它们的过程是: 左指针left_ptr指向4, 右指针right_ptr指向1, 然后到2, 到3 </span></span><br><span class="line">        <span class="comment">// 这三个数都比4小, 为4提供了3个逆序对</span></span><br><span class="line">        <span class="comment">// 此时right_ptr指向了5, 大于4, 再往后当然也大于4</span></span><br><span class="line">        <span class="comment">// 然后left_ptr就该往右移动了</span></span><br><span class="line">        <span class="comment">// 在left_ptr移动之时, 就是清算右数组为4提供的逆序对个数的时机</span></span><br><span class="line">        <span class="comment">// 数字5在数组中的位置 - 数字1在数组中的位置, 即为: right_ptr 与 右数组起点之间的距离</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">MergeSort</span>(nums);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// [start, mid] 和 [mid + 1, end]这对子区间是排好序的, 现在需要合并</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;vec, vector&lt;<span class="type">int</span>&gt; &amp;tmp, <span class="type">int</span> start, <span class="type">int</span> mid, <span class="type">int</span> end)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 给两个子区间换个名字: [start1, end1] 和 [start2, end2]</span></span><br><span class="line">        <span class="type">int</span> start1 = start, end1 = mid;</span><br><span class="line">        <span class="type">int</span> start2 = mid + <span class="number">1</span>, end2 = end;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把两个有序子区间代表的数组合并成一个有序数组, 放在tmp数组里</span></span><br><span class="line">        <span class="comment">// 这里的做法和合并两个有序链表就是一个思路了</span></span><br><span class="line">        <span class="type">int</span> i = start;</span><br><span class="line">        <span class="keyword">while</span> (start1 &lt;= end1 &amp;&amp; start2 &lt;= end2)&#123;</span><br><span class="line">            <span class="comment">// 注意这个判断条件, 必须是小于等于, 因为等于的情况不能提供逆序对</span></span><br><span class="line">            <span class="keyword">if</span> (vec[start1] &lt;= vec[start2]) &#123;</span><br><span class="line">                tmp[i++] = vec[start1++];</span><br><span class="line">                ans += (start2 - (mid + <span class="number">1</span>)); <span class="comment">// 每当左指针start1移动,就清算逆序对</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tmp[i++] = vec[start2++];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">while</span> (start1 &lt;= end1) &#123;</span><br><span class="line">            tmp[i++] = vec[start1++];</span><br><span class="line">            ans += (start2 - (mid + <span class="number">1</span>)); <span class="comment">// 每当左指针start1移动,就清算逆序对</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (start2 &lt;= end2)</span><br><span class="line">            tmp[i++] = vec[start2++];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 再把合并好的有序数组写回vec的相应位置里, vec还是没有改动</span></span><br><span class="line">        <span class="built_in">copy</span>(tmp.<span class="built_in">begin</span>() + start, tmp.<span class="built_in">begin</span>() + end + <span class="number">1</span>, vec.<span class="built_in">begin</span>() + start);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">MergeSort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;vec)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = vec.<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">tmp</span><span class="params">(n)</span></span>;</span><br><span class="line">        <span class="comment">// 自顶向下的递归法是先把数组不断二分, 直到子数组大小为1</span></span><br><span class="line">        <span class="comment">// 自底向上的迭代法则是子数组大小从1开始, 每次大小翻倍直到n</span></span><br><span class="line">        <span class="comment">// step则是步长, 或者说子数组大小</span></span><br><span class="line">        <span class="comment">// 倍进枚举步长1, 2, 4,...</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> step = <span class="number">1</span>; step &lt; n; step += step)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 每次把相邻的一对区间合并, start指的是这一对区间的起点</span></span><br><span class="line">            <span class="comment">// 合并完后向后走两个步长(offset), 到达下一对区间的起点</span></span><br><span class="line">            <span class="type">int</span> offset = step + step;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> start = <span class="number">0</span>; start &lt; n; start += offset)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">int</span> mid = <span class="built_in">min</span>(start + step - <span class="number">1</span>, n - <span class="number">1</span>);</span><br><span class="line">                <span class="comment">// 左闭右闭区间, start + offset 是下一对区间的起点</span></span><br><span class="line">                <span class="comment">// 再减一才是当前这一对区间的end</span></span><br><span class="line">                <span class="type">int</span> end = <span class="built_in">min</span>(start + offset - <span class="number">1</span>, n - <span class="number">1</span>);</span><br><span class="line">                <span class="built_in">Merge</span>(vec, tmp, start, mid, end);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="青色的豆子 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="青色的豆子 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>青色的豆子
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/06/24/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%AE%80%E8%BF%B0/" title="归并排序简述">http://example.com/2022/06/24/归并排序简述/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/24/TCP%E6%80%BB%E7%BB%93/" rel="prev" title="TCP总结">
+      <i class="fa fa-chevron-left"></i> TCP总结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">归并排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">归并排序的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">归并排序的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.</span> <span class="nav-text">归并排序的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%B3%95-%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">递归法(自顶向下)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E6%B3%95-%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A"><span class="nav-number">1.3.2.</span> <span class="nav-text">迭代法(自底向上)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E9%A2%98%E7%9B%AE%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">归并排序题目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#148-%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8"><span class="nav-number">1.4.1.</span> <span class="nav-text">148. 排序链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%91%E6%8C%87-Offer-51-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9"><span class="nav-number">1.4.2.</span> <span class="nav-text">剑指 Offer 51. 数组中的逆序对</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="青色的豆子"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">青色的豆子</p>
+  <div class="site-description" itemprop="description">杨花榆荚无才思，惟解漫天作雪飞</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangxinyuan07" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhangxinyuan07" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zxy1079669873@gmail.com" title="E-Mail → mailto:zxy1079669873@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-06 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">青色的豆子</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共11.1k字</span>
+</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-shizuku"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
+
